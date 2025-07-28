@@ -1,33 +1,68 @@
+# Import necessary modules from PySpark
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf
 from pyspark.sql.types import IntegerType
 
+# ------------------------------------------------------------------------------
+# Step 1: Create SparkSession - Entry point to PySpark functionality
+# ------------------------------------------------------------------------------
 spark = SparkSession.builder.appName('UDF Example').getOrCreate()
 
-# Create a UDF that doubles the value
+# ------------------------------------------------------------------------------
+# Step 2: Define a Python function to double a number
+# This function will be converted to a UDF (User Defined Function)
+# ------------------------------------------------------------------------------
 def double_num(x):
-    return x * 2
+    return x * 2  # Returns double the input number
 
-# Register UDF
+# ------------------------------------------------------------------------------
+# Step 3: Register the function as a UDF
+# We need to specify the return type using PySpark's DataType (IntegerType here)
+# ------------------------------------------------------------------------------
 double_udf = udf(double_num, IntegerType())
 
-# Create DataFrame
+# ------------------------------------------------------------------------------
+# Step 4: Create a sample DataFrame with a single column "number"
+# ------------------------------------------------------------------------------
 df = spark.createDataFrame([(1,), (2,), (3,)], ['number'])
 
-# Apply UDF
+# ------------------------------------------------------------------------------
+# Step 5: Apply the UDF to the "number" column using withColumn
+# This creates a new column "doubled" with the result of double_udf
+# ------------------------------------------------------------------------------
 df.withColumn('doubled', double_udf('number')).show()
 
+# Output:
+# +------+-------+
+# |number|doubled|
+# +------+-------+
+# |     1|      2|
+# |     2|      4|
+# |     3|      6|
+# +------+-------+
 
-
-
-from pyspark.sql.functions import udf
-from pyspark.sql.types import IntegerType
-
-@udf(IntegerType())
+# ------------------------------------------------------------------------------
+# Alternative Approach: Annotations | Use decorator syntax to define UDF
+# ------------------------------------------------------------------------------
+@udf(IntegerType())  # This registers the function as a UDF with IntegerType output
 def double_num(x):
     return x * 2
 
-# Create DataFrame
+# ------------------------------------------------------------------------------
+# Step 6: Re-create the same DataFrame (optional if reusing existing df)
+# ------------------------------------------------------------------------------
 df = spark.createDataFrame([(1,), (2,), (3,)], ['number'])
 
+# ------------------------------------------------------------------------------
+# Step 7: Apply the decorated UDF directly without needing to register separately
+# ------------------------------------------------------------------------------
 df.withColumn('doubled', double_num('number')).show()
+
+# ------------------------------------------------------------------------------
+# Concepts Highlighted:
+# - UDF: Used when native Spark SQL functions are not sufficient.
+# - withColumn: Used to add or replace a column.
+# - udf(): Converts a Python function to a Spark UDF.
+# - Decorator @udf(): Cleaner way to register a function directly as UDF.
+# - IntegerType: Specifies return type of UDF (required).
+# ------------------------------------------------------------------------------

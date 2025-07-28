@@ -14,8 +14,16 @@ data = [
     ("East", "Apple", 5),
     ("East", "Banana", 30),
     ("West", "Apple", 20),
-    ("West", "Banana", 10)
+    ("West", "Banana", 10),
+    ("South", "Orange", 15),
+    ("South", "Orange", 25),
+    ("East", "Orange", 5),
+    ("East", "Orange", 30),
+    ("West", "Orange", 20),
+    ("West", "Orange", 10)
+
 ]
+
 
 # Columns: Region, Fruit, Sales
 df = spark.createDataFrame(data, ["Region", "Fruit", "Sales"])

@@ -16,7 +16,8 @@ data = [
     ("East", "HR", "Male", 75000, 110),
     ("West", "Marketing", "Female", 54000, 210),
     ("North", "Sales", "Female", 63000, 180),
-    ("South", "HR", "Male", 71000, 190)
+    ("South", "HR", "Male", 71000, 190),
+    ("South", "HR", "Male", 79000, 190)
 ]
 
 # Define schema
