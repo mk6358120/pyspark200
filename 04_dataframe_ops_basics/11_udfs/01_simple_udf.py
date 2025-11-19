@@ -58,11 +58,8 @@ df = spark.createDataFrame([(1,), (2,), (3,)], ['number'])
 # ------------------------------------------------------------------------------
 df.withColumn('doubled', double_num('number')).show()
 
-# ------------------------------------------------------------------------------
-# Concepts Highlighted:
-# - UDF: Used when native Spark SQL functions are not sufficient.
-# - withColumn: Used to add or replace a column.
-# - udf(): Converts a Python function to a Spark UDF.
-# - Decorator @udf(): Cleaner way to register a function directly as UDF.
-# - IntegerType: Specifies return type of UDF (required).
-# ------------------------------------------------------------------------------
+# --------------Register UDF for temp views ----------------------
+
+df.createOrReplaceTempView("nums")
+spark.udf.register("double_view_num", double_num)
+spark.sql("select double_view_num(number) from nums").show()
